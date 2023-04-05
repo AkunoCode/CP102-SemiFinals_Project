@@ -9,7 +9,7 @@ class Retail:
             passwd='Johnleo1152003.'
         )
 
-        self.self.cursor = self.db.self.cursor()
+        self.cursor = self.db.cursor()
 
     def database_creation(self):
         # Check if database exists
@@ -18,7 +18,7 @@ class Retail:
         db_exist = False
 
         for db in database:
-            if 'retailDB' in db:
+            if 'retaildb' in db:
                 db_exist = True
                 break
 
@@ -26,7 +26,7 @@ class Retail:
         if not db_exist:
 
             # Create RetailDB database
-            self.cursor.execute("CREATE DATABASE RetailDB")
+            self.cursor.execute("CREATE DATABASE retailDB")
 
             # Use RetailDB database
             self.cursor.execute("USE RetailDB")
@@ -85,6 +85,9 @@ class Retail:
                 self.cursor.execute(
                     "INSERT INTO products (name, description, price, quantity_in_stock) VALUES (%s, %s, %s, %s)", product)
 
+            self.cursor.execute(
+                'INSERT INTO admins (lastname, firstname, passwd) VALUES ("Echevaria", "John Leo", "Johnleo115")')
+
             # Commit changes and close self.cursor and connection
             self.db.commit()
 
@@ -92,3 +95,32 @@ class Retail:
 
         else:
             print("RetailDB Database already exists")
+
+    def log_in(self):
+
+        self.cursor.execute("USE RetailDB")
+
+        # Log in to the system
+        print("Log in to the system")
+
+        # Admin or Customer
+        user_type = input("Admin or Customer: ")
+
+        while True:
+            if user_type == "Admin":
+                admin = int(input("Admin ID: "))
+                password = input("Password: ")
+
+                # Check if username and password are correct
+                self.cursor.execute(
+                    f"SELECT * FROM admins WHERE admin_id = {admin} AND BINARY passwd = '{password}'")
+                user = self.cursor.fetchone()
+
+                if user:
+                    print("Log in successful")
+                    break
+                else:
+                    print("Log in failed")
+
+            elif user_type == "Customer":
+                pass
