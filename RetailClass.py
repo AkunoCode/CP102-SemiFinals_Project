@@ -66,19 +66,12 @@ class Retail:
                                 "firstname VARCHAR(255) NOT NULL,"
                                 "passwd VARCHAR(255));")
 
-            self.cursor.execute("CREATE TABLE inventory ("
-                                "inventory_id INT PRIMARY KEY AUTO_INCREMENT,"
-                                "product_id INT,"
-                                "quantity_in_stock INT,"
-                                "FOREIGN KEY (product_id) REFERENCES products (product_id));")
-
-            # Insert data into tables
-            products = [("Ballpoint Pen", "Black ink pen with a ball bearing tip", 10.00, 20),
+            # Insert data into product table
+            products = [("Ballpen", "Black ink pen with a ball bearing tip", 10.00, 20),
                         ("Pencil", "Standard yellow pencil with eraser", 8.00, 20),
                         ("Eraser", "Soft eraser to remove pencil marks", 5.00, 20),
                         ("Highlighter", "Fluorescent pen for highlighting important text", 50.00, 20),
-                        ("Whiteboard Marker",
-                        "Dry-erase marker for writing on whiteboards", 75.00, 20),
+                        ("Marker", "Dry-erase marker for writing on whiteboards", 75.00, 20),
                         ("Notebook", "Spiral-bound pad of paper for taking notes", 20.00, 20),
                         ("Ruler", "12-inch straight edge for measuring length", 15.00, 20),
                         ("Scissors", "Sharp tool for cutting paper or other materials", 10.00, 20),
@@ -89,6 +82,7 @@ class Retail:
                 self.cursor.execute(
                     "INSERT INTO products (name, description, price, quantity_in_stock) VALUES (%s, %s, %s, %s)", product)
 
+            # Insert data into admins
             self.cursor.execute(
                 'INSERT INTO admins (lastname, firstname, passwd) VALUES ("Echevaria", "John Leo", "Johnleo115")')
 
@@ -126,6 +120,7 @@ class Retail:
 
                 if user:
                     print("\nLog in successful")
+                    time.sleep(2)
                     return "admin"
                 else:
                     print("\nLog in failed")
@@ -141,6 +136,7 @@ class Retail:
 
                     if customer:
                         print("\nLog in successful")
+                        time.sleep(2)
                         return "customer"
                     else:
                         print("\nLog in failed")
@@ -157,4 +153,90 @@ class Retail:
                     self.db.commit()
 
                     print("\nLog in successful")
+                    time.sleep(2)
                     return "customer"
+
+    def admin_restock(self):
+        # Restock items back to its starting quantity
+        self.cursor.execute("USE RetailDB")
+
+        self.cursor.execute("SELECT * FROM products")
+        products = self.cursor.fetchall()
+
+        for product in products:
+            self.cursor.execute(
+                f"UPDATE products SET quantity_in_stock = 20 WHERE product_id = {product[0]}")
+
+        self.db.commit()
+
+        print("Restock successful")
+        time.sleep(2)
+
+    def admin_view_inventory(self):
+        # View inventory
+        self.cursor.execute("USE RetailDB")
+
+        self.cursor.execute("SELECT * FROM products")
+        products = self.cursor.fetchall()
+
+        print("Product ID\tName\t\t\tPrice\t\tQuantity in Stock")
+
+        for product in products:
+            if len(product[1]) >= 8:
+                space = 2
+            else:
+                space = 3
+            print(
+                f"{product[0]}\t\t{product[1]}"+"\t"*space+f"{product[3]}\t\t{product[4]}")
+
+        input("\nPress enter to continue...")
+        time.sleep(2)
+
+    def admin_view_sales(self):
+        # View sales
+        self.cursor.execute("USE RetailDB")
+
+        self.cursor.execute("SELECT * FROM sales")
+        sales = self.cursor.fetchall()
+
+        print(
+            "Sale ID\t\tSale Date\t\t\tCustomer ID\tProduct ID\tQuantity Sold\tTotal Amount")
+
+        for sale in sales:
+            print(
+                f"{sale[0]}\t\t{sale[1]}\t\t{sale[2]}\t\t{sale[3]}\t\t{sale[4]}\t\t{sale[5]}")
+
+        input("\nPress enter to continue...")
+        time.sleep(2)
+
+    def admin_view_customers(self):
+        # View customers
+        self.cursor.execute("USE RetailDB")
+
+        self.cursor.execute("SELECT * FROM customers")
+        customers = self.cursor.fetchall()
+
+        print("Customer ID\tName\t\t\t\tContact Number\t\tEmail\t\t\tAddress")
+
+        for customer in customers:
+            print(
+                f"{customer[0]}\t\t{customer[1]}\t\t{customer[2]}\t\t{customer[3]}\t\t{customer[4]}")
+
+        input("\nPress enter to continue...")
+        time.sleep(2)
+
+    def admin_view_admins(self):
+        # View admins
+        self.cursor.execute("USE RetailDB")
+
+        self.cursor.execute("SELECT * FROM admins")
+        admins = self.cursor.fetchall()
+
+        print("Admin ID\tName\t\t\t\tPassword")
+
+        for admin in admins:
+            print(
+                f"{admin[0]}\t\t{admin[1]} {admin[2]}\t\t{admin[3]}")
+
+        input("\nPress enter to continue...")
+        time.sleep(2)
