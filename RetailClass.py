@@ -329,3 +329,45 @@ class Retail:
 
         print("Product updated")
         time.sleep(2)
+
+        def customer_buy(self):
+            # Display the products
+            self.cursor.execute("SELECT * FROM products")
+            products = self.cursor.fetchall()
+
+            print("Product ID\tName\t\t\tPrice\t\tQuantity in Stock")
+
+            for product in products:
+                if len(product[1]) >= 8:
+                    space = 2
+                else:
+                    space = 3
+                print(
+                    f"{product[0]}\t\t{product[1]}"+"\t"*space+f"{product[3]}\t\t{product[4]}")
+
+            # Get the product ID
+            product_id = int(input("\nProduct ID: "))
+            # Get the quantity
+            quantity = int(input("Quantity: "))
+            # Get the customer ID
+            customer_id = int(input("Customer ID: "))
+            # Get the date
+            date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # Get the price by multiplying quantity sold and price
+            self.cursor.execute(
+                f"SELECT price FROM products WHERE product_id = {product_id}")
+            price = quantity * self.cursor.fetchone()[0]
+
+            # Insert the sale into the sales table
+            self.cursor.execute("USE RetailDB")
+            self.cursor.execute(
+                f"INSERT INTO sales (sale_date, customer_id, product_id, quantity_sold, total_amount) VALUES ('{date}', {customer_id}, {product_id}, {quantity}, {price})")
+
+            # Update the quantity in products
+            self.cursor.execute(
+                f"UPDATE products SET quantity_in_stock = quantity_in_stock - {quantity} WHERE product_id = {product_id}")
+
+            self.db.commit()
+
+            print("Sale complete")
+            time.sleep(2)
