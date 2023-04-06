@@ -1,3 +1,4 @@
+import datetime
 import mysql.connector
 import time
 import os
@@ -239,4 +240,92 @@ class Retail:
                 f"{admin[0]}\t\t{admin[1]} {admin[2]}\t\t{admin[3]}")
 
         input("\nPress enter to continue...")
+        time.sleep(2)
+
+    def admin_add_product(self):
+        # Add product
+        self.cursor.execute("USE RetailDB")
+
+        self.cursor.execute("SELECT * FROM products")
+        products = self.cursor.fetchall()
+
+        print("Product ID\tName\t\t\tPrice\t\tQuantity in Stock")
+
+        for product in products:
+            if len(product[1]) >= 8:
+                space = 2
+            else:
+                space = 3
+            print(
+                f"{product[0]}\t\t{product[1]}"+"\t"*space+f"{product[3]}\t\t{product[4]}")
+
+        product_name = input("\nProduct name: ")
+        product_description = input("Product description: ")
+        product_price = float(input("Product price: "))
+        product_quantity = int(input("Product quantity: "))
+
+        self.cursor.execute(
+            f"INSERT INTO products (name, description, price, quantity_in_stock) VALUES ('{product_name}', '{product_description}', {product_price}, {product_quantity})")
+
+        self.db.commit()
+
+        print("Product added")
+        time.sleep(2)
+
+    def admin_remove_product(self):
+        # Remove product
+        self.cursor.execute("USE RetailDB")
+
+        self.cursor.execute("SELECT * FROM products")
+        products = self.cursor.fetchall()
+
+        print("Product ID\tName\t\t\tPrice\t\tQuantity in Stock")
+
+        for product in products:
+            if len(product[1]) >= 8:
+                space = 2
+            else:
+                space = 3
+            print(
+                f"{product[0]}\t\t{product[1]}"+"\t"*space+f"{product[3]}\t\t{product[4]}")
+
+        product_id = int(input("\nProduct ID: "))
+
+        self.cursor.execute(
+            f"DELETE FROM products WHERE product_id = {product_id}")
+
+        self.db.commit()
+
+        print("Product removed")
+        time.sleep(2)
+
+    def admin_update_product(self):
+        # Update product
+        self.cursor.execute("USE RetailDB")
+
+        self.cursor.execute("SELECT * FROM products")
+        products = self.cursor.fetchall()
+
+        print("Product ID\tName\t\t\tPrice\t\tQuantity in Stock")
+
+        for product in products:
+            if len(product[1]) >= 8:
+                space = 2
+            else:
+                space = 3
+            print(
+                f"{product[0]}\t\t{product[1]}"+"\t"*space+f"{product[3]}\t\t{product[4]}")
+
+        product_id = int(input("\nProduct ID: "))
+        product_name = input("Product name: ")
+        product_description = input("Product description: ")
+        product_price = float(input("Product price: "))
+        product_quantity = int(input("Product quantity: "))
+
+        self.cursor.execute(
+            f"UPDATE products SET name = '{product_name}', description = '{product_description}', price = {product_price}, quantity_in_stock = {product_quantity} WHERE product_id = {product_id}")
+
+        self.db.commit()
+
+        print("Product updated")
         time.sleep(2)
