@@ -1,4 +1,6 @@
 import mysql.connector
+import time
+import os
 
 
 class Retail:
@@ -24,6 +26,8 @@ class Retail:
 
         # Create database if it does not exist
         if not db_exist:
+            print("Creating RetailDB Database...")
+            time.sleep(2)
 
             # Create RetailDB database
             self.cursor.execute("CREATE DATABASE retailDB")
@@ -91,23 +95,27 @@ class Retail:
             # Commit changes and close self.cursor and connection
             self.db.commit()
 
+            os.system('cls')
             print("RetailDB Database created")
+            time.sleep(2)
 
         else:
             print("RetailDB Database already exists")
+            time.sleep(2)
 
     def log_in(self):
 
         self.cursor.execute("USE RetailDB")
 
         # Log in to the system
-        print("Log in to the system")
+        print("Log in to the system\n")
 
         # Admin or Customer
-        user_type = input("Admin or Customer: ")
+        user_type = input("Admin or Customer: ").lower()
 
         while True:
-            if user_type == "Admin":
+            os.system('cls')
+            if user_type == "admin":
                 admin = int(input("Admin ID: "))
                 password = input("Password: ")
 
@@ -117,10 +125,36 @@ class Retail:
                 user = self.cursor.fetchone()
 
                 if user:
-                    print("Log in successful")
-                    break
+                    print("\nLog in successful")
+                    return "admin"
                 else:
-                    print("Log in failed")
+                    print("\nLog in failed")
 
-            elif user_type == "Customer":
-                pass
+            elif user_type == "customer":
+                customer_status = input(
+                    "Existing member or new member (Type: Existing/New): ").lower()
+                if customer_status == "existing":
+                    customer_id = int(input("Customer ID: "))
+                    self.cursor.execute(
+                        f"SELECT * FROM customers WHERE customer_id = {customer_id}")
+                    customer = self.cursor.fetchone()
+
+                    if customer:
+                        print("\nLog in successful")
+                        return "customer"
+                    else:
+                        print("\nLog in failed")
+
+                elif customer_status == "new":
+                    customer_name = input("\nName: ")
+                    customer_contact = input("Contact number: ")
+                    customer_email = input("Email: ")
+                    customer_address = input("Address: ")
+
+                    self.cursor.execute(
+                        f"INSERT INTO customers (name, contact_number, email, address) VALUES ('{customer_name}', '{customer_contact}', '{customer_email}', '{customer_address}')")
+
+                    self.db.commit()
+
+                    print("\nLog in successful")
+                    return "customer"
