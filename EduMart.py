@@ -460,22 +460,21 @@ class Store:
         It will automatically calculate the total price of the product and update it in the cart table./n
         It will also update the quantity in stock of the product"""
 
-        # printing the cart
+        # printing the cart by joining the products and cart tables
         self.cursor.execute(
-            f"SELECT * FROM cart WHERE customer_id = {self.customer_id}")
+            f"SELECT cart.product_id, products.name, cart.quantity, cart.price FROM cart INNER JOIN products ON cart.product_id = products.product_id WHERE customer_id = {self.customer_id}")
         cart = self.cursor.fetchall()
 
-        print("Cart: ")
-        print("Product ID\tProduct Name\tQuantity\tPrice")
+        # Printing the cart
+        print("Product ID\tProduct Name\t\t\tQuantity\tPrice")
         for product in cart:
-            # Ensuring even spacing
-            if len(product[2]) < 8:
-                space = "\t\t"
+            # Checking if the product name is longer than 8 characters
+            if len(product[1]) > 8:
+                print(
+                    f"{product[0]}\t\t{product[1]}\t{product[2]}\t\t{product[3]}")
             else:
-                space = "\t"
-
-            print(
-                f"{product[1]}\t\t{product[2]}{space}{product[3]}\t\t{product[4]}")
+                print(
+                    f"{product[0]}\t\t{product[1]}\t\t{product[2]}\t\t{product[3]}")
 
         # Asking for input for product ID
         product_id = input("Enter the product ID: ")
