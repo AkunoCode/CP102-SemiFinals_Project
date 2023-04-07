@@ -74,6 +74,13 @@ class Store:
                                 "FOREIGN KEY (customer_id) REFERENCES customers (customer_id),"
                                 "FOREIGN KEY (product_id) REFERENCES products (product_id));")
 
+            # Payment Method table
+            self.cursor.execute("CREATE TABLE payment_method ("
+                                "payment_id INT PRIMARY KEY AUTO_INCREMENT,"
+                                "payment_method VARCHAR(255) NOT NULL,"
+                                "customer_id INT,"
+                                "FOREIGN KEY (customer_id) REFERENCES customers (customer_id));")
+
             # Sales table
             self.cursor.execute("CREATE TABLE sales ("
                                 "sale_id INT PRIMARY KEY AUTO_INCREMENT,"
@@ -82,15 +89,10 @@ class Store:
                                 "product_id INT,"
                                 "quantity_sold INT,"
                                 "total_amount DECIMAL(10, 2),"
+                                "payment_method INT,"
                                 "FOREIGN KEY (customer_id) REFERENCES customers (customer_id),"
-                                "FOREIGN KEY (product_id) REFERENCES products (product_id));")
-
-            # Payment Method table
-            self.cursor.execute("CREATE TABLE payment_method ("
-                                "payment_id INT PRIMARY KEY AUTO_INCREMENT,"
-                                "payment_method VARCHAR(255) NOT NULL,"
-                                "customer_id INT,"
-                                "FOREIGN KEY (customer_id) REFERENCES customers (customer_id));")
+                                "FOREIGN KEY (product_id) REFERENCES products (product_id),"
+                                "FOREIGN KEY (payment_method) REFERENCES payment_method (payment_ID));")
 
             # Admins table
             self.cursor.execute("CREATE TABLE admins ("
@@ -219,7 +221,19 @@ class Store:
         # Committing the changes
         self.db.commit()
 
-        print("Customer registered successfully!")
+        # Declaring the customer ID by finding matching email and password
+        self.cursor.execute(
+            f"SELECT customer_id FROM customers WHERE email = '{email}' AND passwd = '{passwd}'")
+        customer_id = self.cursor.fetchall()
+
+        self.customer_id = customer_id[0][0]
+
+        print("\nCustomer registered successfully!\n")
+        print("Your Customer ID is " + str(self.customer_id) + ".\n")
+
+        input("Press Enter to continue...\n")
+
+        return True
 
     def view_products(self):
         """This function will display all the products in the database"""
@@ -428,7 +442,7 @@ class Store:
 
         # Inserting the product details into the database
         self.cursor.execute(
-            f"INSERT INTO cart (customer_id, product_id, quantity, price) VALUES ({self.customer_id}, {product_id}, {quantity}, {quantity} * (SELECT price FROM products WHERE product_id = {product_id})")
+            f"INSERT INTO cart (customer_id, product_id, quantity, price) VALUES ({self.customer_id}, {product_id}, {quantity}, {quantity} * (SELECT price FROM products WHERE product_id = {product_id}))")
 
         # Committing the changes
         self.db.commit()
@@ -440,6 +454,56 @@ class Store:
             f"UPDATE products SET quantity_in_stock = quantity_in_stock - {quantity} WHERE product_id = {product_id}")
 
         input("Press Enter to continue...\n")
+
+    def edit_cart(self):
+        """This function will ask for the product ID and quantity and update the cart table./n
+        It will automatically calculate the total price of the product and update it in the cart table./n
+        It will also update the quantity in stock of the product"""
+
+        # printing the cart
+        self.cursor.execute(
+            f"SELECT * FROM cart WHERE customer_id = {self.customer_id}")
+        cart = self.cursor.fetchall()
+
+        print("Cart: ")
+        print("Product ID\tProduct Name\tQuantity\tPrice")
+        for product in cart:
+            # Ensuring even spacing
+            if len(product[2]) < 8:
+                space = "\t\t"
+            else:
+                space = "\t"
+
+            print(
+                f"{product[1]}\t\t{product[2]}{space}{product[3]}\t\t{product[4]}")
+
+        # Asking for input for product ID
+        product_id = input("Enter the product ID: ")
+
+        # Asking for input for quantity to update the qunatity in cart and add back to stock
+        while True:
+            quantity = input("Enter the quantity: ")
+
+            # If input quantity is bigger than the quantity in cart this will remove the product from the cart and add back to stock
+            # else it will update the quantity in cart and add back to stock
+            if int(quantity) >= product[3]:
+                self.cursor.execute(
+                    f"DELETE FROM cart WHERE customer_id = {self.customer_id} AND product_id = {product_id}")
+                print("Product removed from cart successfully!")
+
+                # Updating the quantity in stock of the product
+                self.cursor.execute(
+                    f"UPDATE products SET quantity_in_stock = quantity_in_stock + {product[3]} WHERE product_id = {product_id}")
+                break
+            elif int(quantity) <= product[3]:
+                self.cursor.execute(
+                    f"UPDATE cart SET quantity = {quantity}, price = {quantity} * (SELECT price FROM products WHERE product_id = {product_id}) WHERE customer_id = {self.customer_id} AND product_id = {product_id}")
+                print("Product quantity updated successfully!")
+
+                # Updating the quantity in stock of the product
+                self.cursor.execute(
+                    f"UPDATE products SET quantity_in_stock = quantity_in_stock + {quantity}")
+                break
 
     def customer_buy(self):
         """This function will ask for the customer's payment method./n
@@ -469,20 +533,22 @@ class Store:
 
             total_price += product[5]
 
-        print(f"Total Price: {total_price}")
+        print(f"\nTotal Price: {total_price}")
 
         # Asking for input for confirmation
         while True:
-            confirm = input("Proceed with purchase? [Y/N]: ").upper()
+            confirm = input("\nProceed with purchase? [Y/N]: ").upper()
 
             if confirm == "Y":
                 break
             elif confirm == "N":
                 return
             else:
-                print("Invalid input!")
+                print("\nInvalid input!")
+                time.sleep(2)
 
         # Asking for input for payment method
+        os.system("cls")
         while True:
             print("Payment Methods: ")
             print("[1] Cash")
@@ -505,8 +571,10 @@ class Store:
                 break
             else:
                 print("Invalid payment method!")
+                time.sleep(2)
 
         # Confirming payment
+        os.system("cls")
         print(f"Payment Method: {payment_method}")
         while True:
             confirm = input("Confirm payment? [Y/N]: ").upper()
@@ -517,12 +585,13 @@ class Store:
                 return
             else:
                 print("Invalid input!")
+                time.sleep(2)
 
         # Adding into the sales table
         for product in cart:
             self.cursor.execute(
                 f"INSERT INTO sales (customer_id, product_id, quantity, price, payment_method) VALUES ({self.customer_id}, {product[2]}, {product[4]}, {product[5]}, '{payment_method}')")
 
-        print("Purchase successful!")
+        print("\nPurchase successful!")
 
         input("Press Enter to continue...")

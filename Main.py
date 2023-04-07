@@ -6,13 +6,19 @@ os.system('cls')
 # Create a Store object
 store = Store()
 
-os.system('cls')
 # Login as an admin or customer
 while True:
-    user_type = input('Login as an admin or customer? or "exit": ').lower()
+    os.system('cls')
+    print('Welcome to EduMart!')
+    print('\nPlease login to continue.')
+    print('\nLogin as: ')
+    print('[1] Admin')
+    print('[2] Customer')
+    print('[3] Exit')
+    user_type = input('\nChoose an action: ')
     os.system('cls')
 
-    if user_type == "admin":
+    if user_type == "1":
         admin = admin_login = store.admin_login()
         if admin_login == True:
             os.system('cls')
@@ -65,18 +71,28 @@ while True:
                     os.system('cls')
                     break
 
-    elif user_type == "customer":
-        customer = customer_login = store.customer_login()
+    elif user_type == "2":
+        while True:
+            os.system('cls')
+            type = input("Are you registered? (Y/N): ").lower()
+            if type == "y":
+                customer_login = store.customer_login()
+                break
+            elif type == "n":
+                store.customer_register()
+            else:
+                print("Invalid input. Please try again.")
+                time.sleep(2)
+                os.system('cls')
         if customer_login == True:
             os.system('cls')
             while True:
                 print('Customer Actions:')
                 # Add To Cart, Remove From Cart, Pay, Edit Cart, Edit Profile, Logout
                 print("[1] Add To Cart")
-                print("[2] Remove From Cart")
-                print("[3] Edit Cart")
-                print("[4] Pay")
-                print("[5] Logout")
+                print("[2] Edit Cart")
+                print("[3] Pay")
+                print("[4] Logout")
 
                 customer_action = int(input("\nEnter an action: "))
                 os.system('cls')
@@ -85,19 +101,16 @@ while True:
                     store.add_to_cart()
                     os.system('cls')
                 elif customer_action == 2:
-                    store.remove_from_cart()
-                    os.system('cls')
-                elif customer_action == 3:
                     store.edit_cart()
                     os.system('cls')
-                elif customer_action == 4:
+                elif customer_action == 3:
                     store.customer_buy()
                     os.system('cls')
-                elif customer_action == 5:
+                elif customer_action == 4:
                     os.system('cls')
                     break
 
-    elif user_type == "exit":
+    elif user_type == "3":
         print("Exiting...")
         time.sleep(2)
         os.system('cls')
