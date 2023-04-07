@@ -1,73 +1,108 @@
-from RetailClass import Retail
+from EduMart import Store
 import time
 import os
 
-# Create an instance of the RetailItem class.
 os.system('cls')
-store = Retail()
-
-store.database_creation()
-os.system('cls')
-print("Loading...")
-time.sleep(3)
+# Create a Store object
+store = Store()
 
 os.system('cls')
-log_in = store.log_in()
-os.system('cls')
-if log_in == 'admin':
-    while True:
-        print('Admin Actions:')
-        # View Inventory, Restock Inventory, View Sales, View Customers, View Admins, Add Product, Delete Product , Update Product, Exit
-        print("[1] View Inventory")
-        print("[2] Restock Inventory")
-        print("[3] View Sales")
-        print("[4] View Customers")
-        print("[5] View Admins")
-        print("[6] Add Product")
-        print("[7] Delete Product")
-        print("[8] Update Product")
-        print("[9] Exit")
-        admin_action = input('What would you like to do? ').lower()
+# Login as an admin or customer
+while True:
+    user_type = input('Login as an admin or customer? or "exit": ').lower()
+    os.system('cls')
 
+    if user_type == "admin":
+        admin = admin_login = store.admin_login()
+        if admin_login == True:
+            os.system('cls')
+            while True:
+                print('Admin Actions:')
+                # View Products, View Sales, View Customers, View Admins, Add Product, Add Admin,
+                # Remove Product, Update Product, Restock Product
+                print("[1] View Products")
+                print("[2] View Sales")
+                print("[3] View Customers")
+                print("[4] View Admins")
+                print("[5] Add Product")
+                print("[6] Add Admin")
+                print("[7] Remove Product")
+                print("[8] Update Product")
+                print("[9] Restock Product")
+                print("[10] Logout")
+
+                admin_action = int(input("\nEnter an action: "))
+                os.system('cls')
+
+                if admin_action == 1:
+                    store.view_products()
+                    os.system('cls')
+                elif admin_action == 2:
+                    store.view_sales()
+                    os.system('cls')
+                elif admin_action == 3:
+                    store.view_customers()
+                    os.system('cls')
+                elif admin_action == 4:
+                    store.view_admins()
+                    os.system('cls')
+                elif admin_action == 5:
+                    store.add_product()
+                    os.system('cls')
+                elif admin_action == 6:
+                    store.add_admin()
+                    os.system('cls')
+                elif admin_action == 7:
+                    store.remove_product()
+                    os.system('cls')
+                elif admin_action == 8:
+                    store.update_product()
+                    os.system('cls')
+                elif admin_action == 9:
+                    store.restock_product()
+                    os.system('cls')
+                elif admin_action == 10:
+                    os.system('cls')
+                    break
+
+    elif user_type == "customer":
+        customer = customer_login = store.customer_login()
+        if customer_login == True:
+            os.system('cls')
+            while True:
+                print('Customer Actions:')
+                # Add To Cart, Remove From Cart, Pay, Edit Cart, Edit Profile, Logout
+                print("[1] Add To Cart")
+                print("[2] Remove From Cart")
+                print("[3] Edit Cart")
+                print("[4] Pay")
+                print("[5] Logout")
+
+                customer_action = int(input("\nEnter an action: "))
+                os.system('cls')
+
+                if customer_action == 1:
+                    store.add_to_cart()
+                    os.system('cls')
+                elif customer_action == 2:
+                    store.remove_from_cart()
+                    os.system('cls')
+                elif customer_action == 3:
+                    store.edit_cart()
+                    os.system('cls')
+                elif customer_action == 4:
+                    store.customer_buy()
+                    os.system('cls')
+                elif customer_action == 5:
+                    os.system('cls')
+                    break
+
+    elif user_type == "exit":
+        print("Exiting...")
+        time.sleep(2)
         os.system('cls')
-        if admin_action == '1':
-            store.admin_view_inventory()
-        elif admin_action == '2':
-            store.admin_restock()
-        elif admin_action == '3':
-            store.admin_view_sales()
-        elif admin_action == '4':
-            store.admin_view_customers()
-        elif admin_action == '5':
-            store.admin_view_admins()
-        elif admin_action == '6':
-            store.admin_add_product()
-        elif admin_action == '7':
-            store.admin_delete_product()
-        elif admin_action == '8':
-            store.admin_update_product()
-        elif admin_action == '9':
-            print('Exiting...')
-            time.sleep(2)
-            exit()
-        os.system('cls')
-
-elif log_in == 'customer':
-    while True:
-        print('Customer Actions:')
-        # Buy an item, edit info, exit
-        print("[1] Buy an Item")
-        print("[2] Edit Info")
-        print("[3] Exit")
-        customer_action = input('What would you like to do? ').lower()
-
-        os.system('cls')
-        if customer_action == '1':
-            store.customer_buy()
-        elif customer_action == '2':
-            store.customer_edit_info()
-        elif customer_action == '3':
-            print('Exiting...')
-            time.sleep(2)
-            exit()
+        break
+    else:
+        print("Invalid input. Please try again.")
+        time.sleep(2)
         os.system('cls')
