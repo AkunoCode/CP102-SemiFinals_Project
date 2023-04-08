@@ -341,19 +341,25 @@ class Store:
         It will then insert the admin's details into the database"""
 
         # Asking for input for admin details
-        name = input("Enter the admin name: ")
-        contact_number = input("Enter the admin contact number: ")
-        email = input("Enter the admin email address: ")
+        fname = input("Enter the admin first name: ")
+        lname = input("Enter the admin last name: ")
         passwd = input("Enter the admin password: ")
 
         # Inserting the admin details into the database
         self.cursor.execute(
-            f"INSERT INTO admins (name, contact_number, email, passwd) VALUES ('{name}', '{contact_number}', '{email}', '{passwd}')")
+            f"INSERT INTO admins (firstname, lastname, passwd) VALUES ('{fname}', '{lname}', '{passwd}')")
 
         # Committing the changes
         self.db.commit()
 
-        print("Admin added successfully!")
+        print("\nAdmin added successfully!\n")
+
+        # Printing admin ID
+        self.cursor.execute(
+            f"SELECT admin_id FROM admins WHERE firstname = '{fname}' AND lastname = '{lname}'")
+        admin_id = self.cursor.fetchall()
+
+        print("Your Admin ID is " + str(admin_id[0][0]) + ".\n")
 
         input("Press Enter to continue...\n")
 
