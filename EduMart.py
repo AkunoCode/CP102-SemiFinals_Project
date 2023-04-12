@@ -446,9 +446,19 @@ class Store:
             else:
                 break
 
-        # Inserting the product details into the database
+        # Checking if product_id is already in the cart
         self.cursor.execute(
-            f"INSERT INTO cart (customer_id, product_id, quantity, price) VALUES ({self.customer_id}, {product_id}, {quantity}, {quantity} * (SELECT price FROM products WHERE product_id = {product_id}))")
+            f"SELECT product_id FROM cart WHERE customer_id = {self.customer_id} AND product_id = {product_id}")
+        product_id_in_cart = self.cursor.fetchone()
+
+        if product_id_in_cart:
+            # Updating the quantity and price in the cart table
+            self.cursor.execute(
+                f"UPDATE cart SET quantity = quantity + {quantity}, price = price + {quantity} * (SELECT price FROM products WHERE product_id = {product_id}) WHERE customer_id = {self.customer_id} AND product_id = {product_id}")
+        else:
+            # Inserting the product details into the database
+            self.cursor.execute(
+                f"INSERT INTO cart (customer_id, product_id, quantity, price) VALUES ({self.customer_id}, {product_id}, {quantity}, {quantity} * (SELECT price FROM products WHERE product_id = {product_id}))")
 
         # Committing the changes
         self.db.commit()
