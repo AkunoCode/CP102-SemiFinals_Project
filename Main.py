@@ -89,24 +89,21 @@ while True:
             while True:
                 print('Customer Actions:')
                 # Add To Cart, Remove From Cart, Pay, Edit Cart, Edit Profile, Logout
-                print("[1] Add To Cart")
-                print("[2] Edit Cart")
-                print("[3] Pay")
-                print("[4] Logout")
+                print("[1] Buy Product")
+                print("[2] Edit Account")
+                print("[3] Logout")
 
                 customer_action = int(input("\nEnter an action: "))
                 os.system('cls')
 
+            
                 if customer_action == 1:
-                    store.add_to_cart()
-                    os.system('cls')
-                elif customer_action == 2:
-                    store.edit_cart()
-                    os.system('cls')
-                elif customer_action == 3:
                     store.customer_buy()
                     os.system('cls')
-                elif customer_action == 4:
+                elif customer_action == 2:
+                    store.customer_edit()
+                    os.system('cls')
+                elif customer_action == 3:
                     os.system('cls')
                     break
 
