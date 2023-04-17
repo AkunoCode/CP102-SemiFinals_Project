@@ -35,6 +35,7 @@ The outcome of this project is a Python program that can:
 | `customer_buy()` | Calls the `view_product()` method to display the products to the user and asks them for the product_id and quantity. The price will automatically be calculated and the user will be prompted to choose a payment method. After confirming the info, it will be inserted into the sales table in the database, and the quantity will be deducted from the stocks of the product table. |
 
 - `Main.py`: The main program that allows users to log in as either an admin or a customer and perform various actions.
+- `EduMartDB.sql`: The mysql script for the EduMartDB. Same program is already included inside the EduMart class.
 
 ## Usage
 To use the program, simply run `Main.py`. The program will prompt the user to log in as either an admin or a customer, and then perform various actions depending on the user's choice.
