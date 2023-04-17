@@ -63,16 +63,6 @@ class Store:
                                 "passwd VARCHAR(255) NOT NULL,"
                                 "address TEXT NOT NULL);")
 
-            # Customer's Cart table through a product ID list
-            self.cursor.execute("CREATE TABLE cart ("
-                                "cart_id INT PRIMARY KEY AUTO_INCREMENT,"
-                                "customer_id INT,"
-                                "product_id INT,"
-                                "quantity INT,"
-                                "price DECIMAL(10, 2),"
-                                "FOREIGN KEY (customer_id) REFERENCES customers (customer_id),"
-                                "FOREIGN KEY (product_id) REFERENCES products (product_id));")
-
             # Payment Method table
             self.cursor.execute("CREATE TABLE payment_method ("
                                 "payment_id INT PRIMARY KEY AUTO_INCREMENT,"
