@@ -4,11 +4,11 @@ import os
 
 
 class Store:
-    def __init__(self):
+    def __init__(self, dbuser='root', dbpass='Johnleo1152003.'):
         self.db = mysql.connector.connect(
             host='localhost',
-            user='root',
-            passwd='Johnleo1152003.'
+            user=dbuser,
+            passwd=dbpass
         )
         # Create a cursor
         self.cursor = self.db.cursor()
@@ -28,22 +28,27 @@ class Store:
         # Check if the database exists
         for db in database:
             if 'edumartdb' in db:
+                # Set the database
+                self.cursor.execute("USE edumartdb")
                 # Get the list of tables in the database
                 self.cursor.execute("SHOW TABLES")
                 tables = self.cursor.fetchall()
 
                 # Check if all the necessary tables exist
                 if len(tables) == 5:
+                    os.system('cls')
                     print("Opening EduMart Database...")
                     time.sleep(3)
                     return 'edumartdb'
                 else:
+                    os.system('cls')
                     # Drop the database
                     print("EduMart Database is corrupted. Rebuilding EduMart Database...")
                     time.sleep(3)
 
                     self.cursor.execute("DROP DATABASE edumartdb")
         else:
+            os.system('cls')
             # Create the database
             print("EduMart Database not found. Creating EduMart Database...")
             time.sleep(3)

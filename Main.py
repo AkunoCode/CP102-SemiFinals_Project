@@ -3,8 +3,30 @@ import time
 import os
 
 os.system('cls')
-# Create a Store object
-store = Store()
+
+# Setting up database environment
+while True:
+    print("Setting up database environment...")
+    time.sleep(2)
+    print("\nDefault database settings: ")
+    print("Host: localhost")
+    print("User: root")
+    print("Password: Johnleo1152003.")
+    choice = input("\nWould you like to use the default database settings? (Y/N): ").lower()
+    if choice == "n":
+        user = input("\nEnter your MySQL username: ")
+        password = input("Enter your MySQL password: ")
+        # Create a Store object
+        store = Store(user, password)
+        break
+    elif choice == "y":
+        # Create a Store object
+        store = Store()
+        break
+    else:
+        print("Invalid input. Please try again.")
+        time.sleep(2)
+        os.system('cls')
 
 # Login as an admin or customer
 while True:
