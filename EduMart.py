@@ -28,9 +28,21 @@ class Store:
         # Check if the database exists
         for db in database:
             if 'edumartdb' in db:
-                print("Opening EduMart Database...")
-                time.sleep(3)
-                return 'edumartdb'
+                # Get the list of tables in the database
+                self.cursor.execute("SHOW TABLES")
+                tables = self.cursor.fetchall()
+
+                # Check if all the necessary tables exist
+                if len(tables) == 5:
+                    print("Opening EduMart Database...")
+                    time.sleep(3)
+                    return 'edumartdb'
+                else:
+                    # Drop the database
+                    print("EduMart Database is corrupted. Rebuilding EduMart Database...")
+                    time.sleep(3)
+
+                    self.cursor.execute("DROP DATABASE edumartdb")
         else:
             # Create the database
             print("EduMart Database not found. Creating EduMart Database...")
