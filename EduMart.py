@@ -156,7 +156,7 @@ class Store:
             print("Admin ID: 1")
             print("Password: " + passwd + "\n")
 
-            input("Press Enter to continue...\n")
+            input("\nPress Enter to continue...\n")
 
             return 'edumartdb'
 
@@ -178,12 +178,12 @@ class Store:
 
             if admin:
                 print("Login successful!\n")
-                input("Press Enter to continue...\n")
+                input("\nPress Enter to continue...\n")
                 os.system('cls')
                 return True
             else:
                 print("Invalid Admin ID or Password. Please try again.\n")
-                input("Press Enter to continue...\n")
+                input("\nPress Enter to continue...\n")
                 os.system('cls')
 
     def customer_login(self):
@@ -204,7 +204,9 @@ class Store:
             self.customer_id = customer_id
             return True
         else:
-            return False
+            print("Invalid Admin ID or Password. Please try again.\n")
+            input("\nPress Enter to continue...\n")
+            os.system('cls')
 
     def customer_register(self):
         """This function will ask for the customer's details./n
@@ -234,7 +236,7 @@ class Store:
         print("\nCustomer registered successfully!\n")
         print("Your Customer ID is " + str(self.customer_id) + ".\n")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
         return True
 
@@ -257,7 +259,7 @@ class Store:
             print(
                 f"{product[0]}\t\t{product[1]}{space}{product[2]}\t\t{product[3]}")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def view_sales(self):
         """This function will display all the sales in the database"""
@@ -273,7 +275,7 @@ class Store:
             print(
                 f"{sale[0]}\t\t{sale[1]}\t{sale[2]}\t\t{sale[3]}\t\t{sale[4]}\t\t{sale[5]}")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def view_customers(self):
         """This function will display all the customers in the database"""
@@ -294,7 +296,7 @@ class Store:
             print(
                 f"{customer[0]}\t\t{customer[1]}{space}{customer[2]}\t\t{customer[3]}")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def view_admins(self):
         """This function will display all the admins in the database"""
@@ -315,7 +317,7 @@ class Store:
             print(
                 f"{admin[0]}\t\t{admin[1]}{space}{admin[2]}\t\t{admin[3]}")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def add_product(self):
         """This function will ask for the product details./n
@@ -337,7 +339,7 @@ class Store:
 
         print("Product added successfully!")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def add_admin(self):
         """This function will ask for the admin details./n
@@ -364,7 +366,7 @@ class Store:
 
         print("Your Admin ID is " + str(admin_id[0][0]) + ".\n")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def remove_product(self):
         """This function will ask for the product ID./n
@@ -385,7 +387,7 @@ class Store:
 
         print("Product removed successfully!")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def update_product(self):
         """This function will ask for the product ID./n
@@ -411,7 +413,7 @@ class Store:
 
         print("Product updated successfully!")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def restock_product(self):
         """This function will reset the quantity in stock of all products to 20"""
@@ -424,7 +426,7 @@ class Store:
 
         print("All products have been restocked successfully!")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def customer_edit(self):
         """This function will edit the customer's details"""
@@ -434,17 +436,18 @@ class Store:
         contact = input("Enter new customer contact number: ")
         email = input("Enter new customer email: ")
         passwd = input("Enter new customer password: ")
+        address = input("Enter new customer address: ")
 
         # Updating the customer details in the database
         self.cursor.execute(
-            f"UPDATE customers SET name = '{name}', contact_number = '{contact}', email = '{email}', passwd = '{passwd}' WHERE customer_id = {self.customer_id}")
+            f"UPDATE customers SET name = '{name}', contact_number = '{contact}', email = '{email}', passwd = '{passwd}', address = '{address}' WHERE customer_id = {self.customer_id}")
 
         # Committing the changes
         self.db.commit()
 
         print("Customer updated successfully!")
 
-        input("Press Enter to continue...\n")
+        input("\nPress Enter to continue...\n")
 
     def customer_buy(self):
         """This function will show the items available and ask for the product ID and quantity./n
@@ -516,4 +519,48 @@ class Store:
 
         print("\nPurchase successful!")
 
-        input("Press Enter to continue...")
+        input("\nPress Enter to continue...")
+
+    def custom_search(self):
+        """This function can do an advanced search on the products table either by name or price_range"""
+
+        print("Search by: ")
+        print("[1] Name")
+        print("[2] Price Range")
+
+        search_by = int(input("\nEnter the search method: "))
+        while True:
+            if search_by == 1:
+                name = input("Enter the product name: ")
+                self.cursor.execute(
+                    f"SELECT * FROM products WHERE name LIKE '%{name}%'")
+                products = self.cursor.fetchall()
+                break
+            elif search_by == 2:
+                min_range = input("Enter the minimum price range: ")
+                max_range = input("Enter the maximum price range: ")
+                self.cursor.execute(
+                    f"SELECT * FROM products WHERE price BETWEEN {min_range} AND {max_range}")
+                products = self.cursor.fetchall()
+                break
+            else:
+                print("Invalid input!")
+                time.sleep(2)
+        if products:
+            print("\nProducts found!\n")
+            time.sleep(2)
+            os.system("cls")
+            print("Product ID\tName\t\t\t\tPrice\t\tQuantity in Stock")
+            for product in products:
+                # To ensure even spacing between the columns
+                if len(product[1]) >= 8:
+                    space = "\t\t\t"
+                else:
+                    space = "\t\t\t\t"
+                print(f"{product[0]}\t\t{product[1]}{space}{product[2]}\t\t{product[3]}")
+
+            input("\nPress Enter to continue...")
+        else:
+            print("No products found!")
+            input("\nPress Enter to continue...")
+

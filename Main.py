@@ -41,7 +41,7 @@ while True:
     os.system('cls')
 
     if user_type == "1":
-        admin = admin_login = store.admin_login()
+        admin_login = store.admin_login()
         if admin_login == True:
             os.system('cls')
             while True:
@@ -99,6 +99,7 @@ while True:
             type = input("Are you registered? (Y/N): ").lower()
             if type == "y":
                 customer_login = store.customer_login()
+                
                 break
             elif type == "n":
                 store.customer_register()
@@ -113,7 +114,8 @@ while True:
                 # Add To Cart, Remove From Cart, Pay, Edit Cart, Edit Profile, Logout
                 print("[1] Buy Product")
                 print("[2] Edit Account")
-                print("[3] Logout")
+                print("[3] Search Product")
+                print("[4] Logout")
 
                 customer_action = int(input("\nEnter an action: "))
                 os.system('cls')
@@ -126,6 +128,9 @@ while True:
                     store.customer_edit()
                     os.system('cls')
                 elif customer_action == 3:
+                    store.custom_search()
+                    os.system('cls')
+                elif customer_action == 4:
                     os.system('cls')
                     break
 
