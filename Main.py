@@ -3,7 +3,6 @@ import time
 import os
 
 os.system('cls')
-time.sleep(10)
 
 # Setting up database environment
 while True:

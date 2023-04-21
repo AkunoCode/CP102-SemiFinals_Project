@@ -82,8 +82,7 @@ class Store:
             # Payment Method table
             self.cursor.execute("CREATE TABLE payment_method ("
                                 "payment_id INT PRIMARY KEY AUTO_INCREMENT,"
-                                "payment_method VARCHAR(255) NOT NULL,"
-                                "FOREIGN KEY (customer_id) REFERENCES customers (customer_id));")
+                                "payment_method VARCHAR(255) NOT NULL);")
 
             # Sales table
             self.cursor.execute("CREATE TABLE sales ("
@@ -256,7 +255,7 @@ class Store:
                 space = "\t\t\t\t"
 
             print(
-                f"{product[0]}\t\t{product[1]}{space}{product[3]}\t\t{product[4]}")
+                f"{product[0]}\t\t{product[1]}{space}{product[2]}\t\t{product[3]}")
 
         input("Press Enter to continue...\n")
 
