@@ -532,6 +532,7 @@ class Store:
         while True:
             if search_by == 1:
                 name = input("Enter the product name: ")
+                condition = f"Products that contain '{name}'"
                 self.cursor.execute(
                     f"SELECT * FROM products WHERE name LIKE '%{name}%'")
                 products = self.cursor.fetchall()
@@ -539,6 +540,7 @@ class Store:
             elif search_by == 2:
                 min_range = input("Enter the minimum price range: ")
                 max_range = input("Enter the maximum price range: ")
+                condition = f'Products with prices between {min_range} and {max_range}'
                 self.cursor.execute(
                     f"SELECT * FROM products WHERE price BETWEEN {min_range} AND {max_range}")
                 products = self.cursor.fetchall()
@@ -550,7 +552,8 @@ class Store:
             print("\nProducts found!\n")
             time.sleep(2)
             os.system("cls")
-            print("Product ID\tName\t\t\t\tPrice\t\tQuantity in Stock")
+            print(f"Search Condition: {condition}")
+            print("\nProduct ID\tName\t\t\t\tPrice\t\tQuantity in Stock")
             for product in products:
                 # To ensure even spacing between the columns
                 if len(product[1]) >= 8:
@@ -561,6 +564,7 @@ class Store:
 
             input("\nPress Enter to continue...")
         else:
+            print(f"Search Condition: {condition}")
             print("No products found!")
             input("\nPress Enter to continue...")
 
