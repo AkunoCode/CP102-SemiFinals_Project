@@ -67,7 +67,6 @@ class Store:
             self.cursor.execute("CREATE TABLE products ("
                                 "product_id INT PRIMARY KEY AUTO_INCREMENT,"
                                 "name VARCHAR(255) NOT NULL,"
-                                "description TEXT,"
                                 "price DECIMAL(10, 2) NOT NULL,"
                                 "quantity_in_stock INT NOT NULL);")
 
@@ -84,7 +83,6 @@ class Store:
             self.cursor.execute("CREATE TABLE payment_method ("
                                 "payment_id INT PRIMARY KEY AUTO_INCREMENT,"
                                 "payment_method VARCHAR(255) NOT NULL,"
-                                "customer_id INT,"
                                 "FOREIGN KEY (customer_id) REFERENCES customers (customer_id));")
 
             # Sales table
@@ -112,20 +110,20 @@ class Store:
             print("Inserting Data...")
             time.sleep(3)
 
-            products = [("Ballpen", "Black ink pen with a ball bearing tip", 10.00, 20),
-                        ("Pencil", "Standard yellow pencil with eraser", 8.00, 20),
-                        ("Eraser", "Soft eraser to remove pencil marks", 5.00, 20),
-                        ("Highlighter", "Fluorescent pen for highlighting important text", 50.00, 20),
-                        ("Marker", "Dry-erase marker for writing on whiteboards", 75.00, 20),
-                        ("Notebook", "Spiral-bound pad of paper for taking notes", 20.00, 20),
-                        ("Ruler", "12-inch straight edge for measuring length", 15.00, 20),
-                        ("Scissors", "Sharp tool for cutting paper or other materials", 10.00, 20),
-                        ("Glue Stick", "Adhesive stick for attaching paper or other lightweight materials", 15.00, 20),
-                        ("Calculator", "Electronic device for performing mathematical calculations", 200.00, 20)]
+            products = [("Ballpen", 10.00, 20),
+                        ("Pencil", 8.00, 20),
+                        ("Eraser", 5.00, 20),
+                        ("Highlighter", 50.00, 20),
+                        ("Marker", 75.00, 20),
+                        ("Notebook", 20.00, 20),
+                        ("Ruler", 15.00, 20),
+                        ("Scissors", 10.00, 20),
+                        ("Glue Stick", 15.00, 20),
+                        ("Calculator", 200.00, 20)]
 
             for product in products:
                 self.cursor.execute(
-                    "INSERT INTO products (name, description, price, quantity_in_stock) VALUES (%s, %s, %s, %s)", product)
+                    "INSERT INTO products (name, price, quantity_in_stock) VALUES (%s, %s, %s)", product)
 
             # Inserting payment methods
             payment_methods = [("Cash"), ("Credit Card"),
