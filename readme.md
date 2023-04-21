@@ -36,6 +36,11 @@ The outcome of this project is a Python program that can:
 
 - `Main.py`: The main program that allows users to log in as either an admin or a customer and perform various actions.
 - `EduMartDB.sql`: The mysql script for the EduMartDB. Same program is already included inside the EduMart class.
+- `EduMartDB_Model.png`: ER Diagram for EduMartDB Schema
+
+<p align="center">
+  <img src="https://github.com/AkunoCode/CP102-SemiFinals_Project/blob/main/EduMartDB_Model.png?raw=true" alt="ER diagram for EduMartDB schema">
+</p>
 
 ## Usage
 To use the program, simply run `Main.py`. The program will prompt the user to log in as either an admin or a customer, and then perform various actions depending on the user's choice.
