@@ -1,4 +1,6 @@
-# CP102 SemiFinal Term Project - CRUD Operations with Python and MySQL (EduMart)
+<p align="center">
+  <img src="https://drive.google.com/uc?id=16OmB8rSiRuibYxG1o6uXCBtGtOQDNrYd">
+</p>
 
 This is a Python program for managing the EduMart school supplies store using MySQL database with mysql.connector module. The program contains a Store class with various methods for managing the store's products, customers, sales, and admins.
 
