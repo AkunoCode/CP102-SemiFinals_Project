@@ -1,4 +1,6 @@
-# CP102 SemiFinal Term Project - CRUD Operations with Python and MySQL (EduMart)
+<p align="center">
+  <img src="https://drive.google.com/uc?id=16OmB8rSiRuibYxG1o6uXCBtGtOQDNrYd">
+</p>
 
 This is a Python program for managing the EduMart school supplies store using MySQL database with mysql.connector module. The program contains a Store class with various methods for managing the store's products, customers, sales, and admins.
 
@@ -33,6 +35,7 @@ The outcome of this project is a Python program that can:
 | `restock_product()` | Allows admins to restock a product's quantity in the products table in the database. |
 | `customer_edit()` | Allows customers to change their information in the customers table in the database. |
 | `customer_buy()` | Calls the `view_product()` method to display the products to the user and asks them for the product_id and quantity. The price will automatically be calculated and the user will be prompted to choose a payment method. After confirming the info, it will be inserted into the sales table in the database, and the quantity will be deducted from the stocks of the product table. |
+| `custom_search()` | Allows the customer to search for products based on matching text or matching price range |
 
 - `Main.py`: The main program that allows users to log in as either an admin or a customer and perform various actions.
 - `EduMartDB.sql`: The mysql script for the EduMartDB. Same program is already included inside the EduMart class.
