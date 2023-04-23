@@ -399,14 +399,32 @@ class Store:
         # Asking for input for product ID
         product_id = input("Enter the product ID: ")
 
+        print("Leave the field blank if you do not want to update it.\n")
+
         # Asking for input for product details
         name = input("Enter the product name: ")
         price = input("Enter the product price: ")
         quantity_in_stock = input("Enter the quantity in stock: ")
 
-        # Updating the product details in the database
-        self.cursor.execute(
-            f"UPDATE products SET name = '{name}', price = {price}, quantity_in_stock = {quantity_in_stock} WHERE product_id = {product_id}")
+        query_list = []
+        params = []
+
+        # Checking if there is empty input
+        if name != "":
+            query_list.append("name = %s")
+            params.append(name)
+        if price != "":
+            query_list.append("price = %s")
+            params.append(price)
+        if quantity_in_stock != "":
+            query_list.append("quantity_in_stock = %s")
+            params.append(quantity_in_stock)
+        
+        # Executing
+        query = "UPDATE products SET " + ", ".join(query_list) + " WHERE product_id = %s"
+        params.append(product_id)
+        params = tuple(params)
+        self.cursor.execute(query, params)
 
         # Committing the changes
         self.db.commit()
