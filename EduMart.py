@@ -431,6 +431,7 @@ class Store:
     def customer_edit(self):
         """This function will edit the customer's details"""
 
+        print("Leave the field blank if you do not want to change it.\n")
         # Asking for input for customer details
         name = input("Enter new customer name: ")
         contact = input("Enter new customer contact number: ")
@@ -438,9 +439,29 @@ class Store:
         passwd = input("Enter new customer password: ")
         address = input("Enter new customer address: ")
 
+        query_list = []
+        params = []
+
+        # Checking if the fields are empty
+        if name != "":
+            query_list.append("name = %s")
+            params.append(name)
+        if contact != "":
+            query_list.append("contact_number = %s")
+            params.append(contact)
+        if email != "":
+            query_list.append("email = %s")
+            params.append(email)
+        if passwd != "":
+            query_list.append("passwd = %s")
+            params.append(passwd)
+        if address != "":
+            query_list.append("address = %s")
+            params.append(address)
+        
         # Updating the customer details in the database
         self.cursor.execute(
-            f"UPDATE customers SET name = '{name}', contact_number = '{contact}', email = '{email}', passwd = '{passwd}', address = '{address}' WHERE customer_id = {self.customer_id}")
+            f"UPDATE customers SET {', '.join(query_list)} WHERE customer_id = {self.customer_id}", params)
 
         # Committing the changes
         self.db.commit()
