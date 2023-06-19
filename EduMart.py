@@ -4,7 +4,7 @@ import os
 
 
 class Store:
-    def __init__(self, dbuser='root', dbpass='Johnleo1152003.'):
+    def __init__(self, dbuser=USER, dbpass=PASSWORD):
         self.db = mysql.connector.connect(
             host='localhost',
             user=dbuser,
